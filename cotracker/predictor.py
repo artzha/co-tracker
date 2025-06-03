@@ -167,7 +167,7 @@ class CoTrackerPredictor(torch.nn.Module):
         if add_support_grid:
             tracks = tracks[:, :, : -self.support_grid_size**2]
             visibilities = visibilities[:, :, : -self.support_grid_size**2]
-        thr = 0.9
+        thr = 0.7 # Defualt 0.9 is too strict for frodobots
         visibilities = visibilities > thr
 
         # correct query-point predictions
