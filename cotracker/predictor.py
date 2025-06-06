@@ -10,6 +10,7 @@ import torch.nn.functional as F
 from cotracker.models.core.model_utils import smart_cat, get_points_on_a_grid
 from cotracker.models.build_cotracker import build_cotracker
 
+CONF_THR = 0.9 # threshold for confidence in online mode, used in CoTrackerOnlinePredictor
 
 class CoTrackerPredictor(torch.nn.Module):
     def __init__(
@@ -21,7 +22,7 @@ class CoTrackerPredictor(torch.nn.Module):
     ):
         super().__init__()
         self.v2 = v2
-        self.support_grid_size = 6
+        self.support_grid_size = 8 # defaults to 6 (Paper found best with 8)
         model = build_cotracker(
             checkpoint,
             v2=v2,
@@ -167,7 +168,7 @@ class CoTrackerPredictor(torch.nn.Module):
         if add_support_grid:
             tracks = tracks[:, :, : -self.support_grid_size**2]
             visibilities = visibilities[:, :, : -self.support_grid_size**2]
-        thr = 0.7 # Defualt 0.9 is too strict for frodobots
+        thr = CONF_THR
         visibilities = visibilities > thr
 
         # correct query-point predictions
@@ -296,7 +297,7 @@ class CoTrackerOnlinePredictor(torch.nn.Module):
             
         if not self.v2:
             visibilities = visibilities * confidence
-        thr = 0.6
+        thr = CONF_THR
         return (
             tracks
             * tracks.new_tensor(
