@@ -10,7 +10,7 @@ import torch.nn.functional as F
 from cotracker.models.core.model_utils import smart_cat, get_points_on_a_grid
 from cotracker.models.build_cotracker import build_cotracker
 
-CONF_THR = 0.9 # threshold for confidence in online mode, used in CoTrackerOnlinePredictor
+CONF_THR = 0.05 # threshold for confidence in online mode, used in CoTrackerOnlinePredictor
 
 class CoTrackerPredictor(torch.nn.Module):
     def __init__(
@@ -220,7 +220,7 @@ class CoTrackerOnlinePredictor(torch.nn.Module):
     ):
         super().__init__()
         self.v2 = v2
-        self.support_grid_size = 6
+        self.support_grid_size = 6 # Originally 6
         model = build_cotracker(checkpoint, v2=v2, offline=False, window_len=window_len)
         self.interp_shape = model.model_resolution
         self.step = model.window_len // 2
