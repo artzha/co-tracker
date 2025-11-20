@@ -11,7 +11,7 @@ from cotracker.models.core.model_utils import smart_cat, get_points_on_a_grid
 from cotracker.models.build_cotracker import build_cotracker
 
 # CONF_THR = 0.03 # threshold for confidence in online mode, used in CoTrackerOnlinePredictor
-CONF_THR = 0.3
+CONF_THR = 0.35 # 0.3
 
 class CoTrackerPredictor(torch.nn.Module):
     def __init__(
